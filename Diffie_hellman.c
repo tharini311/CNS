@@ -1,29 +1,54 @@
-#include<stdio.h>
-long long int power(int a,int b,int mod)
+#include <math.h>
+#include <stdio.h>
+
+// Power function to return value of a ^ b mod P
+long long int power(long long int a, long long int b, long long int P)
 {
-long long int t;
-if(b==1)
-return a;
-t=power(a,b/2,mod);
-if(b%2==0)
-return (t*t)%mod;
-else
-return (((t*t)%mod)*a)%mod;
+    if (b == 1)
+        return a;
+    else
+        return (((long long int)pow(a, b)) % P);
 }
-long long int calculateKey(int a,int x,int n)
-{
-return power(a,x,n);
-}
+
+// Driver program
 int main()
 {
-long long int n,g,x,a,y,b;
-printf("Enter the value of n and g : ");
-scanf("%lld%lld",&n,&g);
-printf("Enter the value of x for the first person : ");
-scanf("%lld",&x); a=power(g,x,n);
-printf("Enter the value of y for the second person : ");
-scanf("%lld",&y); b=power(g,y,n);
-printf("key for the first person is : %lld\n",power(b,x,n));
-printf("key for the second person is : %lld\n",power(a,y,n));
-return 0;
+    long long int P, G, x, a, y, b, ka, kb;
+
+    // Prompting user for input
+    printf("Enter the value of prime number P: ");
+    scanf("%lld", &P);
+    printf("Enter the value of primitive root G: ");
+    scanf("%lld", &G);
+    printf("Enter the private key for User 1 (a): ");
+    scanf("%lld", &a);
+    printf("Enter the private key for User 2 (b): ");
+    scanf("%lld", &b);
+
+    printf("\nThe value of P : %lld\n", P);
+    printf("The value of G : %lld\n\n", G);
+    printf("The private key a for Alice : %lld\n", a);
+    printf("The private key b for Bob : %lld\n\n", b);
+
+    // Generating keys
+    x = power(G, a, P); // Alice's generated key
+    y = power(G, b, P); // Bob's generated key
+
+    // Generating the secret key after the exchange of keys
+    ka = power(y, a, P); // Secret key for Alice
+    kb = power(x, b, P); // Secret key for Bob
+
+    printf("Public key for Alice is : %lld\n", x);
+    printf("Public key for Bob is : %lld\n", y);
+
+    // Check if the secret keys match
+    if (ka == kb) {
+        printf("\nKey exchange successful!\n");
+        printf("Secret key for User 1 is : %lld\n", ka);
+        printf("Secret key for User 2 is : %lld\n", kb);
+        return 1;
+    } else {
+        printf("\nKey exchange failed!\n");
+        return 0;
+    }
 }
